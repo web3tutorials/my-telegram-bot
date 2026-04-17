@@ -1,5 +1,6 @@
 import logging
-import sqlite3
+import os
+BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")import sqlite3
 import asyncio
 from datetime import datetime, time
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -11,7 +12,8 @@ from telegram.ext import (
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = "8438019674:AAHbMZ4FxX6SHDNlX-C1g7XkpIZVp7wdqyY"
+import os
+BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 ADMIN_IDS = []  # Will be set by first /setadmin command, or hardcode your Telegram user ID here
 
 DB_PATH = "deals.db"
