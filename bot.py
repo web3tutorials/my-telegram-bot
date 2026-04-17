@@ -1,6 +1,6 @@
 import logging
 import os
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")import sqlite3
+import sqlite3
 import asyncio
 from datetime import datetime, time
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
