@@ -252,23 +252,23 @@ WELCOME_TEXT = (
     "━━━━━━━━━━━━━━━━━━━━━\n\n"
     "Your #1 source for *verified crypto casino bonuses*, free spins, "
     "and exclusive iGaming deals — updated 24/7.\n\n"
-    "🏆  *40+ Live Deals*  |  ⚡  *Instant Claims*  |  ₿  *Crypto First*\n\n"
+    "🏆  *40+ Live Deals*  |  ⚡  Instant Claims  |  ₿  Crypto First\n\n"
     "━━━━━━━━━━━━━━━━━━━━━\n"
     "Use the menu below or these commands:\n\n"
     "/hot — 🔥 Today's hottest deals\n"
     "/browse — 📂 Browse by category\n"
     "/casinos — 🏛 All casinos & ratings\n"
     "/dealofday — ⭐ Featured deal\n"
-    "/search \\<keyword\\> — 🔍 Search deals\n"
+    "/search <keyword> — 🔍 Search deals\n"
     "/subscribe — 🔔 Daily alerts at 9 AM\n"
     "/unsubscribe — 🔕 Stop alerts\n\n"
-    "_18\\+ \\| Please gamble responsibly\\._"
+    "_18+ | Please gamble responsibly._"
 )
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         WELCOME_TEXT,
-        parse_mode=ParseMode.MARKDOWN_V2,
+        parse_mode="Markdown",
         reply_markup=main_menu_keyboard(),
     )
 
@@ -315,7 +315,7 @@ async def _send_hot(msg, edit=False):
     if not rows:
         text = "No deals right now — check back soon! 🔜"
         if edit:
-            await msg.edit_message_text(text)
+            await msg.edit_text(text)
         else:
             await msg.reply_text(text)
         return
@@ -326,7 +326,7 @@ async def _send_hot(msg, edit=False):
         "_Verified · Updated 24/7 · Crypto First_\n"
     )
     cards = "\n\n".join(deal_card(r) for r in rows)
-    text = header + "\n" + cards + "\n\n━━━━━━━━━━━━━━━━━━━━━\n_18\\+ \\| gamble responsibly_"
+    text = header + "\n" + cards + "\n\n━━━━━━━━━━━━━━━━━━━━━\n_18+ | Gamble responsibly_"
 
     kb = InlineKeyboardMarkup([[
         InlineKeyboardButton("📂 Browse All", callback_data="cmd_browse"),
@@ -334,15 +334,14 @@ async def _send_hot(msg, edit=False):
     ]])
     try:
         if edit:
-            await msg.edit_message_text(text, parse_mode="Markdown",
-                                         disable_web_page_preview=True, reply_markup=kb)
+            await msg.edit_text(text, parse_mode="Markdown",
+                                disable_web_page_preview=True, reply_markup=kb)
         else:
             await msg.reply_text(text, parse_mode="Markdown",
-                                  disable_web_page_preview=True, reply_markup=kb)
+                                 disable_web_page_preview=True, reply_markup=kb)
     except Exception:
-        # Fallback without Markdown if formatting fails
         if edit:
-            await msg.edit_message_text(cards, disable_web_page_preview=True)
+            await msg.edit_text(cards, disable_web_page_preview=True)
         else:
             await msg.reply_text(cards, disable_web_page_preview=True)
 
@@ -403,7 +402,7 @@ async def _send_deal_of_day(msg, edit=False):
     if not deal:
         text = "No featured deal today — check back soon!"
         if edit:
-            await msg.edit_message_text(text)
+            await msg.edit_text(text)
         else:
             await msg.reply_text(text)
         return
@@ -414,7 +413,7 @@ async def _send_deal_of_day(msg, edit=False):
         + deal_card(deal) +
         "\n\n━━━━━━━━━━━━━━━━━━━━━\n"
         "🌐  [View All Deals](https://better-play.io)\n"
-        "_18\\+ \\| Please gamble responsibly_"
+        "_18+ | Please gamble responsibly_"
     )
 
     kb = InlineKeyboardMarkup([[
@@ -424,22 +423,18 @@ async def _send_deal_of_day(msg, edit=False):
 
     try:
         if deal["image_url"]:
-            if edit:
-                await msg.reply_photo(photo=deal["image_url"], caption=text,
-                                       parse_mode="Markdown")
-            else:
-                await msg.reply_photo(photo=deal["image_url"], caption=text,
-                                       parse_mode="Markdown", reply_markup=kb)
+            await msg.reply_photo(photo=deal["image_url"], caption=text,
+                                  parse_mode="Markdown", reply_markup=kb)
         else:
             if edit:
-                await msg.edit_message_text(text, parse_mode="Markdown",
-                                             disable_web_page_preview=True, reply_markup=kb)
+                await msg.edit_text(text, parse_mode="Markdown",
+                                    disable_web_page_preview=True, reply_markup=kb)
             else:
                 await msg.reply_text(text, parse_mode="Markdown",
-                                      disable_web_page_preview=True, reply_markup=kb)
+                                     disable_web_page_preview=True, reply_markup=kb)
     except Exception:
         if edit:
-            await msg.edit_message_text(deal_card(deal), disable_web_page_preview=True)
+            await msg.edit_text(deal_card(deal), disable_web_page_preview=True)
         else:
             await msg.reply_text(deal_card(deal), disable_web_page_preview=True)
 
@@ -470,11 +465,11 @@ async def _send_casinos(msg, edit=False):
     ]])
 
     if edit:
-        await msg.edit_message_text(text, parse_mode="Markdown",
-                                     disable_web_page_preview=True, reply_markup=kb)
+        await msg.edit_text(text, parse_mode="Markdown",
+                            disable_web_page_preview=True, reply_markup=kb)
     else:
         await msg.reply_text(text, parse_mode="Markdown",
-                              disable_web_page_preview=True, reply_markup=kb)
+                             disable_web_page_preview=True, reply_markup=kb)
 
 
 async def latest(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -739,9 +734,7 @@ async def add_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
         conn.commit()
 
     await update.message.reply_text(
-        f"✅ *Deal added!* (ID: {new_id})\n\n" + deal_card(
-            type("obj", (object,), deal)()
-        ),
+        f"✅ *Deal added!* (ID: {new_id})\n\n" + deal_card(deal),
         parse_mode="Markdown"
     )
 
@@ -831,7 +824,7 @@ async def send_daily_alerts(context: ContextTypes.DEFAULT_TYPE):
         "\n\n━━━━━━━━━━━━━━━━━━━━━\n"
         "🌐  [All Deals → better-play.io](https://better-play.io)\n"
         "🔕  /unsubscribe to stop alerts\n"
-        "_18\\+ \\| Gamble responsibly_"
+        "_18+ | Gamble responsibly_"
     )
     text = header + cards + footer
 
